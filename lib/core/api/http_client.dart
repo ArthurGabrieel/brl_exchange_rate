@@ -27,10 +27,7 @@ class HttpClient {
     Map<String, String> queryParams,
   ) async {
     try {
-      return await dio.get(
-        endpoint,
-        queryParameters: queryParams,
-      );
+      return await dio.get(endpoint, queryParameters: queryParams);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
         final statusCode = e.response?.statusCode;

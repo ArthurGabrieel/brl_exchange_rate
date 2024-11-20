@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../domain/usecases/get_daily_exchange_rates_usecase.dart';
@@ -14,47 +15,38 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     required this.searchExchangeRateUsecase,
     required this.getDailyExchangeRatesUsecase,
   }) : super(ExchangeRateInitial()) {
-    on<FetchCurrentExchangeRateEvent>(_onFetchCurrentExchangeRateEvent);
-    on<FetchDailyExchangeRatesEvent>(_onFetchDailyExchangeRatesEvent);
+    on<FetchExchangeRatesEvent>(_onFetchExchangeRatesEvent);
   }
 
-  Future<void> _onFetchCurrentExchangeRateEvent(
-    FetchCurrentExchangeRateEvent event,
+  Future<void> _onFetchExchangeRatesEvent(
+    FetchExchangeRatesEvent event,
     Emitter<ExchangeRateState> emit,
   ) async {
     emit(ExchangeRateLoading());
-    final result = await searchExchangeRateUsecase(event.currencyCode);
 
-    result.fold(
-      (failure) => emit(ExchangeRateError(_mapFailureToMessage(failure))),
-      (currentExchangeRate) =>
-          emit(CurrentExchangeRateLoaded(currentExchangeRate)),
-    );
-  }
+    try {
+      final currentExchangeRateResult =
+          await searchExchangeRateUsecase(event.currencyCode);
 
-  Future<void> _onFetchDailyExchangeRatesEvent(
-    FetchDailyExchangeRatesEvent event,
-    Emitter<ExchangeRateState> emit,
-  ) async {
-    emit(ExchangeRateLoading());
-    final result = await getDailyExchangeRatesUsecase(event.currencyCode);
+      final currentExchangeRate = currentExchangeRateResult.getOrElse(() {
+        debugPrint(
+            'Error: ${currentExchangeRateResult.fold((l) => l, (r) => r)}');
+        throw currentExchangeRateResult.fold(
+            (failure) => failure, (_) => null)!;
+      });
 
-    result.fold(
-      (failure) => emit(ExchangeRateError(_mapFailureToMessage(failure))),
-      (dailyExchangeRates) =>
-          emit(DailyExchangeRatesLoaded(dailyExchangeRates)),
-    );
-  }
+      final dailyExchangeRatesResult =
+          await getDailyExchangeRatesUsecase(event.currencyCode);
 
-  String _mapFailureToMessage(Failure failure) {
-    if (failure is ServerFailure) {
-      return 'Erro no servidor. Por favor, tente novamente mais tarde.';
-    } else if (failure is UnauthorizedFailure) {
-      return 'Não autorizado. Verifique suas credenciais.';
-    } else if (failure is NotFoundFailure) {
-      return 'Dados não encontrados. Verifique o código da moeda.';
-    } else {
-      return 'Erro desconhecido. Por favor, tente novamente.';
+      final dailyExchangeRates = dailyExchangeRatesResult.getOrElse(() {
+        debugPrint(
+            'Error: ${dailyExchangeRatesResult.fold((l) => l, (r) => r)}');
+        throw dailyExchangeRatesResult.fold((failure) => failure, (_) => null)!;
+      });
+
+      emit(ExchangeRatesLoaded(dailyExchangeRates, currentExchangeRate));
+    } catch (failure) {
+      emit(ExchangeRateError((failure as Failure).message));
     }
   }
 }

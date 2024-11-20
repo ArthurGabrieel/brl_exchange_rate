@@ -14,19 +14,11 @@ class ExchangeRateInitial extends ExchangeRateState {}
 
 class ExchangeRateLoading extends ExchangeRateState {}
 
-class CurrentExchangeRateLoaded extends ExchangeRateState {
+class ExchangeRatesLoaded extends ExchangeRateState {
+  final ExchangeRates dailyExchangeRates;
   final CurrentExchangeRate currentExchangeRate;
 
-  const CurrentExchangeRateLoaded(this.currentExchangeRate);
-
-  @override
-  List<Object> get props => [currentExchangeRate];
-}
-
-class DailyExchangeRatesLoaded extends ExchangeRateState {
-  final ExchangeRates dailyExchangeRates;
-
-  const DailyExchangeRatesLoaded(this.dailyExchangeRates);
+  const ExchangeRatesLoaded(this.dailyExchangeRates, this.currentExchangeRate);
 
   @override
   List<Object> get props => [dailyExchangeRates];

@@ -18,6 +18,7 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
     try {
       final currentExchangeRate =
           await remoteDataSource.searchCurrentExchangeRate(currencyCode);
+
       return Right(currentExchangeRate);
     } on ServerException {
       return const Left(
@@ -31,6 +32,9 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
     try {
       final dailyExchangeRates =
           await remoteDataSource.getDailyExchangeRates(currencyCode);
+
+      dailyExchangeRates.data = dailyExchangeRates.data?.take(30).toList();
+
       return Right(dailyExchangeRates);
     } on ServerException {
       return const Left(
