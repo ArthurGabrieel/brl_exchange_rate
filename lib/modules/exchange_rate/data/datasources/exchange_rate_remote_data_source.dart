@@ -29,6 +29,7 @@ class ExchangeRateRemoteDataSourceImpl implements ExchangeRateRemoteDataSource {
     if (response.statusCode == 200) {
       final data = response.data as Map<String, dynamic>;
       final model = CurrentExchangeRateModel.fromJson(data);
+
       if (model.success == false) {
         debugPrint('success: ${model.success}');
         throw ServerException();
@@ -47,6 +48,7 @@ class ExchangeRateRemoteDataSourceImpl implements ExchangeRateRemoteDataSource {
     if (response.statusCode == 200) {
       final data = response.data as Map<String, dynamic>;
       final model = ExchangeRatesModel.fromJson(data);
+
       if (model.success == false) {
         debugPrint('success: ${model.success}');
         throw ServerException();

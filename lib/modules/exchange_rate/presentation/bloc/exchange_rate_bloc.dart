@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../domain/usecases/get_daily_exchange_rates_usecase.dart';
@@ -29,8 +28,6 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
           await searchExchangeRateUsecase(event.currencyCode);
 
       final currentExchangeRate = currentExchangeRateResult.getOrElse(() {
-        debugPrint(
-            'Error: ${currentExchangeRateResult.fold((l) => l, (r) => r)}');
         throw currentExchangeRateResult.fold(
             (failure) => failure, (_) => null)!;
       });
@@ -39,8 +36,6 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
           await getDailyExchangeRatesUsecase(event.currencyCode);
 
       final dailyExchangeRates = dailyExchangeRatesResult.getOrElse(() {
-        debugPrint(
-            'Error: ${dailyExchangeRatesResult.fold((l) => l, (r) => r)}');
         throw dailyExchangeRatesResult.fold((failure) => failure, (_) => null)!;
       });
 

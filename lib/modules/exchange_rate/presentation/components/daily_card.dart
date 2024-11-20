@@ -78,7 +78,7 @@ class _DailyExchangeRatesCardState extends State<DailyExchangeRatesCard> {
           color: Theme.of(context).primaryColor,
           thickness: 2,
         ),
-        const SizedBox(height: 80),
+        const SizedBox(height: 40),
       ],
     );
   }
@@ -156,7 +156,7 @@ class _DailyExchangeRatesCardState extends State<DailyExchangeRatesCard> {
 
       return Row(
         children: [
-          const Text('CLOSE DIFF (%): ', style: TextStyle(fontSize: 14)),
+          const Text('CLOSE DIFF (%): ', style: TextStyle(fontSize: 12)),
           Text(
             '${diffPercentage.toStringAsFixed(2)}%',
             style: TextStyle(color: diffColor, fontWeight: FontWeight.bold),
