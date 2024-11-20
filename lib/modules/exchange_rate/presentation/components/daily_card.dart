@@ -22,31 +22,37 @@ class _DailyExchangeRatesCardState extends State<DailyExchangeRatesCard> {
     final dataList = widget.dailyExchangeRates.data ?? [];
 
     Widget buildExpandButton() {
-      return Column(
-        children: [
-          Row(
+      return InkWell(
+        onTap: () {
+          if (dataList.isNotEmpty) {
+            setState(() => isExpanded = !isExpanded);
+          } else {
+            context.showSnackBar('No data available');
+          }
+        },
+        child: Ink(
+          child: Column(
             children: [
-              Text(
-                'LAST 30 DAYS',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              Row(
+                children: [
+                  Text(
+                    'LAST 30 DAYS',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    isExpanded ? Icons.remove : Icons.add,
+                    color: Theme.of(context).primaryColor,
+                    size: 30,
+                  ),
+                ],
               ),
-              const Spacer(),
-              IconButton(
-                icon: Icon(isExpanded ? Icons.remove : Icons.add),
-                color: Theme.of(context).primaryColor,
-                onPressed: () {
-                  if (dataList.isNotEmpty) {
-                    setState(() => isExpanded = !isExpanded);
-                  } else {
-                    context.showSnackBar('No data available');
-                  }
-                },
-              ),
+              const SizedBox(height: 14),
             ],
           ),
-        ],
+        ),
       );
     }
 

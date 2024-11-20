@@ -16,21 +16,26 @@ class ExchangeRatePage extends StatefulWidget {
 }
 
 class _ExchangeRatePageState extends State<ExchangeRatePage> {
+  Widget _buildCopyRight() {
+    return Container(
+      height: 40,
+      color: Colors.blue,
+      child: const Center(
+        child: Text(
+          'Copyright 2022 - Action Labs',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 40,
-        color: Colors.blue,
-        child: const Center(
-          child: Text(
-            'Copyright 2022 - Action Labs',
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-        ),
-      ),
+      bottomNavigationBar: _buildCopyRight(),
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
