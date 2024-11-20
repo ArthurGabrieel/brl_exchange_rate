@@ -145,20 +145,28 @@ class _DailyExchangeRatesCardState extends State<DailyExchangeRatesCard> {
   Widget _buildCloseDiff(ExchangeRateData rate, double? previousClose) {
     double? closeDiff;
     double? diffPercentage;
-    Color diffColor = Colors.grey;
-    IconData diffIcon = Icons.remove;
+    Color diffColor;
+    IconData diffIcon;
 
     if (previousClose != null && rate.close != null) {
       closeDiff = rate.close! - previousClose;
       diffPercentage = (closeDiff / previousClose) * 100;
       diffColor = closeDiff >= 0 ? Colors.green : Colors.red;
-      diffIcon = closeDiff >= 0 ? Icons.arrow_upward : Icons.arrow_downward;
+      diffIcon =
+          closeDiff >= 0 ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down;
+
+      String formattedDiffPercentage;
+      if (diffPercentage >= 0) {
+        formattedDiffPercentage = '+${diffPercentage.toStringAsFixed(2)}%';
+      } else {
+        formattedDiffPercentage = '${diffPercentage.toStringAsFixed(2)}%';
+      }
 
       return Row(
         children: [
           const Text('CLOSE DIFF (%): ', style: TextStyle(fontSize: 12)),
           Text(
-            '${diffPercentage.toStringAsFixed(2)}%',
+            formattedDiffPercentage,
             style: TextStyle(color: diffColor, fontWeight: FontWeight.bold),
           ),
           Icon(diffIcon, color: diffColor),
